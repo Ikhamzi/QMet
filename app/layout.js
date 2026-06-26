@@ -8,7 +8,6 @@ export const metadata = {
     'QMet is your trusted partner for ISO consultancy, cybersecurity services, compliance frameworks, and training. Serving organizations across the GCC since 2005.',
 };
 
-
 export default function RootLayout({ children }) {
   return (
     <html lang="en">

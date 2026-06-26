@@ -1,5 +1,7 @@
 'use client';
 import { useEffect, useRef } from 'react';
+import AboutPage from './pages/About';
+import ContactPage from './pages/Contact';
 
 /* ─── Intersection Observer hook for scroll animations ─── */
 function useReveal() {
@@ -39,6 +41,8 @@ export default function HomePage() {
       <IndustriesSection />
       <TestimonialSection />
       <CtaSection />
+      <AboutPage />
+      <ContactPage />
     </>
   );
 }
