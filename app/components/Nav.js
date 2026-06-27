@@ -308,11 +308,14 @@ export default function Nav() {
   }, [pathname]);
 
   // Close desktop dropdowns when mobile menu closes
+  // Lock body scroll when mobile menu is open
   useEffect(() => {
-    if (!menuOpen) {
-      setOpenDropdown(null);
-      setOpenMobileSubmenu(null);
+    if (menuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
     }
+    return () => { document.body.style.overflow = ''; };
   }, [menuOpen]);
 
   // Close dropdown when clicking anywhere outside the nav
@@ -428,6 +431,7 @@ export default function Nav() {
           {/* Uses CSS to show/hide lines vs X — avoids server/client mismatch */}
           <button
             className={`nav-mobile-btn${menuOpen ? ' is-open' : ''}`}
+            style={{ position: 'relative', zIndex: 101 }}
             aria-label="Toggle menu"
             aria-expanded={menuOpen}
             onClick={() => setMenuOpen((prev) => !prev)}
@@ -453,11 +457,38 @@ export default function Nav() {
         </div>
       </div>
 
-      {/* ── Mobile Menu (slides open below nav) ── */}
+      {/* ── Backdrop — tap to close ── */}
+      {menuOpen && (
+        <div
+          className="nav-mobile-backdrop"
+          onClick={() => setMenuOpen(false)}
+        />
+      )}
+      {/* ── Mobile Menu panel ── */}
       <div
         className={`nav-mobile-menu${menuOpen ? ' open' : ''}`}
         aria-hidden={!menuOpen}
       >
+        <div className="nav-mobile-header">
+          <a href="/" className="nav-mobile-brand" onClick={() => setMenuOpen(false)}>
+            <div className="nav-mobile-brand-mark">Q</div>
+            <span className="nav-mobile-brand-text">
+              Q<span>Met</span>
+            </span>
+          </a>
+          <button
+            type="button"
+            className="nav-mobile-close"
+            aria-label="Close menu"
+            onClick={() => setMenuOpen(false)}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+
         <ul>
           {NAV_ITEMS.map((item) => {
             const isOpen = openMobileSubmenu === item.label;
