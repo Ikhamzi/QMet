@@ -102,7 +102,7 @@ const NAV_ITEMS = [
   },
   {
     label: 'About Us',
-    href: '/about',
+    href: '/about ',
     dropdown: {
       type: 'list',
       links: [
@@ -140,13 +140,12 @@ function ChevronIcon({ isOpen }) {
 // ─────────────────────────────────────────────
 // DROPDOWN CONTENT — renders based on type
 // ─────────────────────────────────────────────
-function DropdownContent({ dropdown }) {
-  // Simple list (Industries, About Us)
+function DropdownContent({ dropdown, onLinkClick }) {
   if (dropdown.type === 'list') {
     return (
       <div className="nav-dropdown-inner">
         {dropdown.links.map((link) => (
-          <a key={link.href} href={link.href} className="nav-dropdown-link">
+          <a key={link.href} href={link.href} className="nav-dropdown-link" onClick={onLinkClick}>
             <span className="nav-dropdown-dot" />
             {link.label}
           </a>
@@ -155,36 +154,24 @@ function DropdownContent({ dropdown }) {
     );
   }
 
-  // Products: left sidebar list + right cards area
   if (dropdown.type === 'products') {
     return (
       <div className="nav-dropdown-inner">
         <div style={{ display: 'grid', gridTemplateColumns: '180px 1fr', gap: '0' }}>
-          {/* Left: framework list */}
           <div style={{ borderRight: '1px solid rgba(94,98,209,0.1)', padding: '8px 0' }}>
             <span className="nav-dropdown-section-title" style={{ paddingLeft: '12px' }}>
               Products by framework
             </span>
             {dropdown.leftLinks.map((link) => (
-              <a key={link.href} href={link.href} className="nav-dropdown-link">
+              <a key={link.href} href={link.href} className="nav-dropdown-link" onClick={onLinkClick}>
                 <span className="nav-dropdown-dot" />
                 {link.label}
               </a>
             ))}
           </div>
-          {/* Right: placeholder for product cards */}
           <div style={{ padding: '16px', display: 'flex', alignItems: 'flex-start' }}>
             <div style={{ color: '#9ca3af', fontSize: '13px', paddingTop: '4px' }}>
-              <span
-                style={{
-                  display: 'block',
-                  fontSize: '10px',
-                  fontWeight: 700,
-                  letterSpacing: '0.09em',
-                  textTransform: 'uppercase',
-                  marginBottom: '12px',
-                }}
-              >
+              <span style={{ display: 'block', fontSize: '10px', fontWeight: 700, letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: '12px' }}>
                 Quick Links
               </span>
               {[
@@ -193,7 +180,7 @@ function DropdownContent({ dropdown }) {
                 { label: 'Training & Awareness', href: '/products/training' },
                 { label: 'Online Courses', href: '/products/courses' },
               ].map((link) => (
-                <a key={link.href} href={link.href} className="nav-dropdown-link">
+                <a key={link.href} href={link.href} className="nav-dropdown-link" onClick={onLinkClick}>
                   <span className="nav-dropdown-dot" />
                   {link.label}
                 </a>
@@ -205,7 +192,6 @@ function DropdownContent({ dropdown }) {
     );
   }
 
-  // Resources: multi-column sections
   if (dropdown.type === 'sections') {
     return (
       <div className="nav-dropdown-inner">
@@ -214,13 +200,13 @@ function DropdownContent({ dropdown }) {
             <div key={section.title} className="nav-dropdown-section">
               <span className="nav-dropdown-section-title">{section.title}</span>
               {section.links.map((link) => (
-                <a key={link.href} href={link.href} className="nav-dropdown-link">
+                <a key={link.href} href={link.href} className="nav-dropdown-link" onClick={onLinkClick}>
                   <span className="nav-dropdown-dot" />
                   {link.label}
                 </a>
               ))}
               {section.viewAll && (
-                <a href={section.viewAll.href} className="nav-dropdown-view-all">
+                <a href={section.viewAll.href} className="nav-dropdown-view-all" onClick={onLinkClick}>
                   {section.viewAll.label}
                 </a>
               )}
@@ -401,8 +387,7 @@ export default function Nav() {
 
                   {/* The dropdown panel */}
                   <div className={`${getDropdownClass(item)}${isOpen ? ' open' : ''}`}>
-                    <DropdownContent dropdown={item.dropdown} />
-                  </div>
+                    <DropdownContent dropdown={item.dropdown} onLinkClick={() => setOpenDropdown(null)} />                  </div>
                 </li>
               );
             })}
