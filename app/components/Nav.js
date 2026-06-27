@@ -260,6 +260,8 @@ function MobileDropdownContent({ dropdown, onClose }) {
 // MAIN NAV COMPONENT
 // ─────────────────────────────────────────────
 export default function Nav() {
+  // (removed timer-based closer) — using document-level mousemove containment instead
+
   // Is the page scrolled? (adds background to nav)
   const [scrolled, setScrolled] = useState(false);
 
@@ -325,6 +327,21 @@ export default function Nav() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [mounted]);
 
+  // Document-level mousemove containment: close dropdown when pointer leaves the entire nav
+  useEffect(() => {
+    if (!mounted) return;
+    function handleMouseMove(e) {
+      if (!navRef.current) return;
+      const el = document.elementFromPoint(e.clientX, e.clientY);
+      if (!el) return;
+      if (!navRef.current.contains(el)) {
+        setOpenDropdown(null);
+      }
+    }
+    document.addEventListener('mousemove', handleMouseMove);
+    return () => document.removeEventListener('mousemove', handleMouseMove);
+  }, [mounted]);
+
   // Toggle a desktop dropdown open/closed
   function toggleDropdown(label) {
     setOpenDropdown((prev) => (prev === label ? null : label));
@@ -360,7 +377,9 @@ export default function Nav() {
           </a>
 
           {/* ── Desktop Navigation Links ── */}
-          <ul className="nav-links">
+          <ul
+            className="nav-links"
+          >
             {NAV_ITEMS.map((item) => {
               const isOpen = mounted && openDropdown === item.label;
 
@@ -368,11 +387,10 @@ export default function Nav() {
                 <li
                   key={item.label}
                   className="nav-item"
-                  // Open on hover (desktop only, not when mobile menu is active)
-                  onMouseEnter={() => !menuOpen && setOpenDropdown(item.label)}
-                  onMouseLeave={() => !menuOpen && setOpenDropdown(null)}
+                  onMouseEnter={() => {
+                    if (!menuOpen) setOpenDropdown(item.label);
+                  }}
                 >
-                  {/* Button that toggles the dropdown */}
                   <button
                     type="button"
                     className={`nav-btn${isOpen ? ' open' : ''}${
@@ -385,9 +403,11 @@ export default function Nav() {
                     <ChevronIcon isOpen={isOpen} />
                   </button>
 
-                  {/* The dropdown panel */}
-                  <div className={`${getDropdownClass(item)}${isOpen ? ' open' : ''}`}>
-                    <DropdownContent dropdown={item.dropdown} onLinkClick={() => setOpenDropdown(null)} />                  </div>
+                  <div
+                    className={`${getDropdownClass(item)}${isOpen ? ' open' : ''}`}
+                  >
+                    <DropdownContent dropdown={item.dropdown} onLinkClick={() => setOpenDropdown(null)} />
+                  </div>
                 </li>
               );
             })}
