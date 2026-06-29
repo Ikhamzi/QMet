@@ -416,6 +416,11 @@ export default function Nav() {
             })}
           </ul>
 
+          {/* ── Template Button ── */}
+          <a href="/product" className="nav-template-link">
+            Template
+          </a>
+
           {/* ── Desktop CTA Button ── */}
           <div className="nav-cta">
             <a

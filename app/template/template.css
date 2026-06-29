@@ -1,0 +1,32 @@
+/* ── Template Hero ── */
+.template-hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 140px 0 100px;
+    background: linear-gradient(160deg, #f0f0ff 0%, #ffffff 50%, #f0fdf9 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.template-inner {
+    text-align: center;
+}
+
+.template-h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(32px, 8vw, 64px);
+    font-weight: 800;
+    line-height: 1.2;
+    color: var(--black);
+    margin: 0 0 24px;
+    letter-spacing: -0.02em;
+}
+
+.template-sub {
+    font-size: clamp(16px, 3vw, 20px);
+    color: #666666;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
